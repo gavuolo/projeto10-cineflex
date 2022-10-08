@@ -6,45 +6,53 @@ import { useEffect } from "react"
 import { Link, useParams } from "react-router-dom";
 
 
-export default function SelectSection(){
+export default function SelectSection() {
 
     const { idMovies } = useParams();
-
-    const [info, setInfo] = useState([])
+    const [days, setDays] = useState([])
 
     useEffect(() => {
         const promisse = axios.get(`https://mock-api.driven.com.br/api/v5/cineflex/movies/${idMovies}/showtimes`);
         promisse.then((dados) => {
-            setInfo(dados.data) 
+            setDays(dados.data.days)
+
         });
-        promisse.catch((erro) => 
-        console.log(erro.response.data));
+        promisse.catch((erro) =>
+            console.log(erro.response.data));
     }, []);
 
-    const layout = []
-    let lastDays
+    let time = []
 
-    info.forEach((prod) =>{
-        if(prod.days !== lastDays){
-            layout.push(<MovieDay>{prod.weekday} - {prod.date}</MovieDay>)
-            lastDays = prod.weekday
-        }
-        layout.push(
-        <MovieTime>
-            <ButtonTime>
-            </ButtonTime>
-        </MovieTime>
+    return (
+        <>
+            <SelectTime>
+                <p>Selecione o horário</p>
+            </SelectTime>
 
-        )
-    } )
+            {days.map((a, index) => {
+                return (<>
 
-return(
-    <>
-        <SelectTime>
-            <p>Selecione o horário</p>
-        </SelectTime>
-        {layout}
-    </>
+                    <MovieDay key={index}>
+                        <p>{a.weekday}- {a.date}</p>
+                    </MovieDay>
+                
+                    <MovieTime>
+                        {a.showtimes.map((b) => {
+                            return (
+                            <Link to={`/assentos/${b.id}`}>
+                                <ButtonTime>
+                                    {b.name}
+                                </ButtonTime>
+                            </Link>
+                            )}
+                        )}
+                    </MovieTime>
+
+
+            </>)
+            })}
+
+        </>
     )
 }
 
