@@ -7,9 +7,6 @@ export default function Header(){
         <TopBar>
             <h1>CINEFLEX</h1>
         </TopBar>
-        <SelectFilm>
-            <p>Selecionar filme</p>
-        </SelectFilm>
         </>
     )
 
@@ -29,15 +26,4 @@ const TopBar = styled.div`
         line-height: 40px;
         font-weight: 600;
     }
-`
-const SelectFilm = styled.div`
-    font-family: 'Roboto';
-    font-weight: 400;
-    font-size: 24px;
-    line-height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 375px;
-    height: 50px;
 `
