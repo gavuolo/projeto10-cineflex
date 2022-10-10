@@ -10,18 +10,20 @@ export default function SelectSection() {
 
     const { idMovies } = useParams();
     const [days, setDays] = useState([])
+    const [infoMovie, setInfoMovie] = useState([])
 
     useEffect(() => {
         const promisse = axios.get(`https://mock-api.driven.com.br/api/v5/cineflex/movies/${idMovies}/showtimes`);
         promisse.then((dados) => {
             setDays(dados.data.days)
+            setInfoMovie(dados.data)
 
         });
         promisse.catch((erro) =>
             console.log(erro.response.data));
     }, []);
 
-    let time = []
+
 
     return (
         <>
@@ -37,25 +39,31 @@ export default function SelectSection() {
                     </MovieDay>
                 
                     <MovieTime>
-                        {a.showtimes.map((b) => {
+                        {a.showtimes.map((b, index) => {
                             return (
                             <Link to={`/assentos/${b.id}`}>
-                                <ButtonTime>
+                                <ButtonTime key={index}>
                                     {b.name}
                                 </ButtonTime>
                             </Link>
                             )}
                         )}
                     </MovieTime>
-
-
             </>)
             })}
 
+
+
+        <DivFooter>
+            <Film>
+            <MovieImg src={infoMovie.posterURL} alt={infoMovie.title}/>
+            </Film>
+                <Text >{infoMovie.title}</Text>
+        </DivFooter>
         </>
     )
 }
-
+/*   */
 
 const SelectTime = styled.div`
     font-family: 'Roboto';
@@ -68,6 +76,7 @@ const SelectTime = styled.div`
     width: 100%;
     height: 130px;
     cursor: default;
+    width: 375px;
 `
 const MovieDay = styled.div`
     font-family: 'Roboto';
@@ -94,7 +103,6 @@ const ButtonTime = styled.button`
     color: #FFFFFF;
     width: 82px;
     height: 43px;
-    
     font-family: 'Roboto';
     font-weight: 400;
     font-size: 20px;
@@ -103,3 +111,40 @@ const ButtonTime = styled.button`
     border-radius: 3px;
     cursor: pointer;
 `
+/*------------------------FOOTER----------------------------------*/
+const DivFooter = styled.div`
+    background-color: #DFE6ED;
+    width: 375px;
+    height: 117px;
+    display: flex;
+    align-items: center;
+    border-top: 1px solid #9EADBA;
+    margin-top: 20px;
+`
+const MovieImg = styled.img`
+    width: 50px;
+    height: 75px;
+
+`
+const Film = styled.div`
+    width: 64px;
+    height: 89px;
+    background-color: white;
+    box-shadow: 0px 2px 4px 2px rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 20px
+`
+
+const Text = styled.div`
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 26px;
+    line-height: 30px;
+    margin-left: 20px;
+`
+

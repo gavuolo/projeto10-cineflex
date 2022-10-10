@@ -33,10 +33,10 @@ export default function SelectMovie() {
             </SelectFilm>
 
             
-        {movies.map((movie)=> 
+        {movies.map((movie,index)=> 
         <Link to={`/sessao/${movie.id}`}> 
             <Film>
-                <ImgMovie key={movie.id} src={movie.posterURL} alt={movie.title}/> 
+                <ImgMovie key={index} src={movie.posterURL} alt={movie.title}/> 
             </Film>
         </Link>)}
             
