@@ -13,7 +13,7 @@ export default function SelectSection() {
     const [infoMovie, setInfoMovie] = useState([])
 
     useEffect(() => {
-        const promisse = axios.get(`https://mock-api.driven.com.br/api/v5/cineflex/movies/${idMovies}/showtimes`);
+        const promisse = axios.get(`https://mock-api.driven.com.br/api/v4/cineflex/movies/${idMovies}/showtimes`);
         promisse.then((dados) => {
             setDays(dados.data.days)
             setInfoMovie(dados.data)
@@ -34,7 +34,7 @@ export default function SelectSection() {
             {days.map((a, index) => {
                 return (<>
 
-                    <MovieDay key={index}>
+                    <MovieDay data-identifier="session-date" key={index}>
                         <p>{a.weekday}- {a.date}</p>
                     </MovieDay>
                 
@@ -42,7 +42,7 @@ export default function SelectSection() {
                         {a.showtimes.map((b, index) => {
                             return (
                             <Link to={`/assentos/${b.id}`}>
-                                <ButtonTime key={index}>
+                                <ButtonTime data-identifier="hour-minute-btn"key={index}>
                                     {b.name}
                                 </ButtonTime>
                             </Link>
@@ -56,9 +56,9 @@ export default function SelectSection() {
 
         <DivFooter>
             <Film>
-            <MovieImg src={infoMovie.posterURL} alt={infoMovie.title}/>
+            <MovieImg data-identifier="movie-img-preview" src={infoMovie.posterURL} alt={infoMovie.title}/>
             </Film>
-                <Text >{infoMovie.title}</Text>
+                <Text data-identifier="movie-and-session-infos-preview">{infoMovie.title}</Text>
         </DivFooter>
         </>
     )

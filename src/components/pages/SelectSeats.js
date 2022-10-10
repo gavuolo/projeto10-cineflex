@@ -5,7 +5,7 @@ import { useState } from "react"
 import { useEffect } from "react"
 import { Link, useParams } from "react-router-dom";
 //
-export default function SelectSeats({nome, setNome, cpf, setCpf, selSeat, setSelSeat, infoMovie, setInfoMovie, semana, setSemana, horario, setHorario}){
+export default function SelectSeats({nome, setNome, cpf, setCpf, selSeat, setSelSeat, infoMovie, setInfoMovie, semana, setSemana, horario, setHorario, id, setId}){
 
     const { idSeats } = useParams();
     const [assento, setAssento] = useState([])
@@ -17,7 +17,7 @@ export default function SelectSeats({nome, setNome, cpf, setCpf, selSeat, setSel
     const colorUn ='#FBE192'
 
     useEffect(() => {
-        const promisse = axios.get(`https://mock-api.driven.com.br/api/v5/cineflex/showtimes/${idSeats}/seats`);
+        const promisse = axios.get(`https://mock-api.driven.com.br/api/v4/cineflex/showtimes/${idSeats}/seats`);
         promisse.then((dados) => {
             setAssento(dados.data.seats)
             setInfoMovie(dados.data.movie)
@@ -29,12 +29,35 @@ export default function SelectSeats({nome, setNome, cpf, setCpf, selSeat, setSel
             console.log(erro.response.data));
     }, []);
 
+
+
+    function Enviar(){
+        const obj = { ids: id, name: nome, cpf: cpf}
+        console.log(obj)
+        const urlPost = `https://mock-api.driven.com.br/api/v4/cineflex/seats/book-many`
+        const post = axios.post(urlPost, obj);
+        
+        post.then(() =>{
+            alert("Obrigada pela compra!")
+            console.log("deu sim")
+        }
+        )
+        post.catch((a)=>{
+            alert("Erro! Faltou alguma informação")
+            console.log(a.response.data)
+        }
+        )
     
 
+    }
     function Clicou(cadeira){
         setSelSeat([...selSeat, cadeira])
+        setId([...id, cadeira.id])
+        console.log(cadeira)
+        
     }
 
+    console.log(assento)
     return(
         <>
         <Select>
@@ -43,8 +66,11 @@ export default function SelectSeats({nome, setNome, cpf, setCpf, selSeat, setSel
 
         <SeatsRoll>
         {assento.map((a)=>{
+            
             return(
-                <Seats key={a.id} cor={a.isAvaliable ? '#FBE192':'#C3CFD9' && selSeat.includes(a) ? '#1AAE9E' : '#C3CFD9' } onClick={() => Clicou(a)} disabled={a.isAvaliable}>
+                <Seats data-identifier="seat" key={a.id} disabled={a.isAvailable}
+                cor={selSeat.includes(a) ? '#1AAE9E' : '#C3CFD9' } 
+                onClick={() => Clicou(a)} >
                     {a.name}
                 </Seats>
             )
@@ -53,15 +79,15 @@ export default function SelectSeats({nome, setNome, cpf, setCpf, selSeat, setSel
         </SeatsRoll>
 
         <Descripiton>
-            <SeatsExemple>
+            <SeatsExemple data-identifier="seat-selected-subtitle">
                 <Seats cor={colorSelect}></Seats>
                 <p>Selecionado</p>
-            </SeatsExemple>
-            <SeatsExemple>
+            </SeatsExemple >
+            <SeatsExemple data-identifier="seat-available-subtitle" >
                 <Seats cor={colorFree}></Seats>
                 <p>Disponível</p>
             </SeatsExemple>
-            <SeatsExemple >
+            <SeatsExemple data-identifier="seat-unavailable-subtitle" >
                 <Seats cor={colorUn}></Seats>
                 <p>Indisponível</p>
             </SeatsExemple>
@@ -70,18 +96,18 @@ export default function SelectSeats({nome, setNome, cpf, setCpf, selSeat, setSel
 
         <Information>
             <p>Nome do comprador:</p>
-            <input value={nome} onChange={(e) => setNome(e.target.value)} type="text" placeholder="Digite seu nome..."/>
+            <input  data-identifier="buyer-name-input" value={nome} onChange={(e) => setNome(e.target.value)} type="text" placeholder="Digite seu nome..."/>
         </Information>
 
         <Information>
             <p>CPF do comprador</p>
-            <input value={cpf} onChange={(e) => setCpf(e.target.value)} type="text" placeholder="Digite seu CPF..."/>
+            <input data-identifier="buyer-cpf-input" value={cpf} onChange={(e) => setCpf(e.target.value)} type="text" placeholder="Digite seu CPF..."/>
         </Information>
         
         <DivReservation>
         
         <Link to={`/sucesso`}>
-            <Reservation>
+            <Reservation data-identifier="reservation-btn" onClick={Enviar}>
                 <p>Reservar assento(s)</p>
             </Reservation>
         </Link>
@@ -91,16 +117,16 @@ export default function SelectSeats({nome, setNome, cpf, setCpf, selSeat, setSel
 
         <DivFooter>
             <Film>
-            <MovieImg key={infoMovie.id} src={infoMovie.posterURL} alt={infoMovie.title}/>
+            <MovieImg data-identifier="movie-img-preview" key={infoMovie.id} src={infoMovie.posterURL} alt={infoMovie.title}/>
             </Film>
-                <Text key={infoMovie.id} >{infoMovie.title}<br/> {semana} - {horario} </Text>
+                <Text data-identifier="movie-and-session-infos-preview" key={infoMovie.id} >{infoMovie.title}<br/> {semana} - {horario} </Text>
         </DivFooter>
    
         </>
     )
 }
 
-const Seats = styled.div`
+const Seats = styled.button`
     width: 26px;
     height: 26px;
     background: ${props => props.cor};
@@ -119,11 +145,15 @@ const Seats = styled.div`
     align-items: center;
     justify-content: center;
     margin-bottom: 10px;
+    &&:disabled{
+        background-color: #FBE192;
+        cursor: not-allowed;
+    }
 
 `
 
 const SeatsSel = styled.div`
-width: 26px;
+    width: 26px;
     height: 26px;
     background: ${props => props.cor};
     color: #000000;

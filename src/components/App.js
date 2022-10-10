@@ -16,6 +16,7 @@ export default function App() {
     const [infoMovie, setInfoMovie] = useState([])
     const [semana, setSemana] = useState([])
     const [horario, setHorario] = useState([])
+    const [id, setId] = useState([])
 return (
 
     <BrowserRouter>
@@ -37,6 +38,8 @@ return (
             setSemana={setSemana}
             horario={horario}
             setHorario={setHorario}
+            id={id}
+            setId={setId}
             />}
             />
             <Route path="/sucesso" element={<FinishTicket
@@ -46,6 +49,7 @@ return (
             infoMovie={infoMovie}
             semana={semana}
             horario={horario}
+            id={id}
             />}
             />
         </Routes>

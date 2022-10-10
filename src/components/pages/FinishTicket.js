@@ -5,12 +5,12 @@ import { useState } from "react"
 import { useEffect } from "react"
 import { Link } from "react-router-dom";
 
-export default function FinishTicket({nome, cpf, selSeat, infoMovie, semana, horario}){
+export default function FinishTicket({nome, cpf, selSeat, infoMovie, semana, horario, id}){
 
     
     //Post
-    //const promisse = axios.get(`https://mock-api.driven.com.br/api/v5/cineflex/seats/book-many`);
-    console.log(infoMovie)
+
+    
     return(
         <>
         <Confirmation>
@@ -18,13 +18,13 @@ export default function FinishTicket({nome, cpf, selSeat, infoMovie, semana, hor
             com sucesso!</p>
         </Confirmation>
 
-        <Information>
+        <Information data-identifier="movie-session-infos-reserve-finished">
             <Negrito>Filme e Sessão</Negrito>
             <p>{infoMovie.title}</p>
             <p>{semana} - {horario}</p>
         </Information>
 
-        <Information>
+        <Information data-identifier="seat-infos-reserve-finished">
             <Negrito>Ingressos</Negrito>
             {selSeat.map((a, index)=>{
                 return(
@@ -34,7 +34,7 @@ export default function FinishTicket({nome, cpf, selSeat, infoMovie, semana, hor
               
         </Information>
 
-        <Information>
+        <Information data-identifier="seat-infos-reserve-finished">
             <Negrito>Comprador</Negrito>
             <p>Nome: {nome}</p>
             <p>CPF: {cpf}</p>
@@ -43,7 +43,7 @@ export default function FinishTicket({nome, cpf, selSeat, infoMovie, semana, hor
 
         <BackHome>
             <Link to="/">
-                <ButtonHome>
+                <ButtonHome data-identifier="back-to-home-btn">
                     <p>Voltar pra Home</p>
                 </ButtonHome>
             </Link>        

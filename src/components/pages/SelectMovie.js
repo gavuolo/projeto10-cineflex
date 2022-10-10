@@ -10,7 +10,7 @@ export default function SelectMovie() {
     const [movies, setMovies] = useState([])
  
     useEffect( () => {
-        const URL = "https://mock-api.driven.com.br/api/v5/cineflex/movies"
+        const URL = "https://mock-api.driven.com.br/api/v4/cineflex/movies"
         const promise = axios.get(URL)
         
         promise.then((dados) =>{
@@ -33,10 +33,10 @@ export default function SelectMovie() {
             </SelectFilm>
 
             
-        {movies.map((movie,index)=> 
+        {movies.map((movie, index)=> 
         <Link to={`/sessao/${movie.id}`}> 
             <Film>
-                <ImgMovie key={index} src={movie.posterURL} alt={movie.title}/> 
+                <ImgMovie data-identifier="movie-outdoor" key={index} src={movie.posterURL} alt={movie.title}/> 
             </Film>
         </Link>)}
             
